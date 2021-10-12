@@ -1,0 +1,147 @@
+%--------------------
+% Packages
+% -------------------
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage{gentium}
+\usepackage{mathptmx} % Use Times Font
+
+
+\usepackage[pdftex]{graphicx} % Required for including pictures
+\usepackage[swedish]{babel} % Swedish translations
+\usepackage[pdftex,linkcolor=black,pdfborder={0 0 0}]{hyperref} % Format links for pdf
+\usepackage{calc} % To reset the counter in the document after title page
+\usepackage{enumitem} % Includes lists
+
+\frenchspacing % No double spacing between sentences
+\linespread{1.2} % Set linespace
+\usepackage[a4paper, lmargin=0.1666\paperwidth, rmargin=0.1666\paperwidth, tmargin=0.1111\paperheight, bmargin=0.1111\paperheight]{geometry} %margins
+%\usepackage{parskip}
+
+\usepackage[all]{nowidow} % Tries to remove widows
+\usepackage[protrusion=true,expansion=true]{microtype} % Improves typography, load after fontpackage is selected
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+
+%-----------------------
+% Set pdf information and add title, fill in the fields
+%-----------------------
+\hypersetup{ 	
+pdfsubject = {},
+pdftitle = {},
+pdfauthor = {}
+}
+
+%-----------------------
+% Begin document
+%-----------------------
+\begin{document} %All text i dokumentet hamnar mellan dessa taggar, allt ovanför är formatering av dokumentet
+
+\section{Cycle Finding}
+
+\subsection*{Pseudo-Code}
+\hspace*{\parindent}\textbf{nodes} is an undirected, connected or unconnected graph with \textbf{v} vertices and \textbf{e} edges \\
+
+procedure \textbf{bfs}(\textbf{nodes}) \\
+\hspace*{\parindent}\hspace*{\parindent}\textbf{visited} is an int vector with \textbf{v} elements \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}for \textbf{i} = 0 to \textbf{i} < \textbf{v} \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}if  \textbf{i} has not been visited and \textbf{bfsHelper}(\textbf{i}, \textbf{visited}) is true \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}return true \\
+
+\hspace*{\parindent}\hspace*{\parindent} return false \\
+
+procedure \textbf{bfsHelper}(\textbf{i}, \textbf{visited}) \\
+\hspace*{\parindent}\hspace*{\parindent}\textbf{parents} is an int vector with \textbf{v} elements \\
+\hspace*{\parindent}\hspace*{\parindent}\textbf{q} is an int queue \\
+
+\hspace*{\parindent}set \textbf{visited[i]} to 1 \\
+\hspace*{\parindent}\hspace*{\parindent}push \textbf{i} to \textbf{q} \\
+
+\hspace*{\parindent}\textbf{u} is an int \\
+
+\hspace*{\parindent}while \textbf{q} is not empty \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}set \textbf{u} to the front of \textbf{q} \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}pop \textbf{q} \\
+
+\hspace*{\parindent}\hspace*{\parindent}for \textbf{n} in \textbf{nodes[u]} \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}if \textbf{n} has not been visited \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}mark \textbf{n} as visited \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}push \textbf{n} to \textbf{q} \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}set \textbf{parents[n]} to u \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}else if \textbf{parents[u]} != \textbf{n} \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}return true \\
+ 
+\hspace*{\parindent}return false
+
+\subsection*{Correctness Proof}
+Proof by contradiction. Assume a cycle will not be detected. The algorithm visits all vertices with distance u from the current vertex before visiting any nodes with dist $\geq$ u+1. If a vertex v has not been visited, it is marked as visited, pushed to the queue, and the most recently dequeued vertex is marked as its parent. A vertex v may have been visited and may not be the parent of the most recently dequeued vertex. Verices enqueued or dequeued from the queue share an edge with a previously visited vertex (besides the first enqueued vertex). It follows that if a vertex v has been visited and is not the parent of the most recently dequeued vertex, then v shares at least 2 edges with at least 2 connected vertices. This is a contradiction because if v shares at least 2 edges with any 2 connected vertices a cycle is formed.
+
+\subsection*{Running Time Proof}
+The time complexity is O(v+e) where v is the number of vertices and e is the number of edges. The outer loop of the BFS algorithm loops v times and e operations are performed within each iteration.
+
+\subsection*{Graph}
+
+\pagebreak
+
+\section{Minimum Spanning Tree}
+
+\subsection*{Pseudo-Code}
+\hspace*{\parindent}\textbf{nodes} is an undirected, connected graph with \textbf{v} vertices and \textbf{e} at most v+8 edges \\
+
+procedure \textbf{primsAlgo()} \\
+\hspace*{\parindent}\hspace*{\parindent}\textbf{vertices} is an int vector \\
+\hspace*{\parindent}\hspace*{\parindent}\textbf{weights} is an int vector with all elements initialized to INT\_MAX \\
+\hspace*{\parindent}\hspace*{\parindent}\textbf{mst} is a bool vector with all elements initialized to false \\
+
+\hspace*{\parindent}\textbf{u}, \textbf{min},  and \textbf{total} are ints \\
+
+\hspace*{\parindent}set \textbf{weights[0]} to 0 \\
+
+\hspace*{\parindent}for \textbf{i} = 0 to \textbf{i} < \textbf{v}-1 \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent} min = INT\_MAX \\
+    
+\hspace*{\parindent}\hspace*{\parindent}if i > 0 \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}for \textbf{j} = 0 to \textbf{j} < \textbf{v} // find index of minimum weight \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}if \textbf{j} has not been added to \textbf{mst} and \textbf{weights[j]} < \textbf{min} \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}set \textbf{min} to \textbf{weights[j]} \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}set \textbf{u} to \textbf{j} \\
+    
+\hspace*{\parindent}\hspace*{\parindent}set \textbf{mst[u]} to true \\
+    
+\hspace*{\parindent}\hspace*{\parindent}for \textbf{j} = 0 to \textbf{j} < \textbf{v} \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}if \textbf{nodes[u][j]} > 0 and \textbf{mst[j]} is false and \textbf{nodes[u][j]} < \textbf{weights[j]} \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}set \textbf{vertices[j]} to \textbf{u} \\
+\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}\hspace*{\parindent}set \textbf{weights[j]} to \textbf{nodes[u][j]}
+
+\subsection*{Correctness Proof}
+Proof by contradiction. Assume the resulting minimum spanning tree S is not minimal weight. E is the ordered set of selected edges $(e_{1}, e_{2}, ..., e_{n-1})$. T is the spanning tree with minimum weight containing the longest prefix sequence of edges in E. If T contains $(e_1, e_2, ..., e_i-1)$, the spanning tree S contains at least $(e_{1}, e_{2}, ..., e_{i})$. If $e_1$ connects {x, y} T must have a path that includes x and y. Edge {x, y} is within S but not within T. {a, b} will represent an edge along a path that includes x and y. The set of edges S = T + ({x, y} - {a, b}) ({x, y} is added and {a, b} is removed). \\
+Case 1: The weight of {x, y} < the weight of {a, b}. In this case, W has an edge {x, y} with less weight than {a, b}. It follows that the weight of S < the weight of T. This is a contradiction because T is the minimum spanning tree. \\
+Case 2: The weight of {x, y} = the weight of {a, b}. In this case, W has an edge {x, y} with equal weight to {a, b}. It follows that T contains edge $e_i$ which is outside the bounds previously defined. This is a contradiction because it is not in line with the definition of T. \\
+Case 3: The weight of {x, y} > the weight of {a, b}. In this case, {a, b} is selected over {x, y} because of its weight value. This contradicts the previous definition that edge {x, y} is not within the true minimum spanning tree. \\
+All cases are contradictions so the assumption is proven invalid.
+
+\subsection*{Running Time Proof}
+The time complexity is $O(v^{2})$ where v is the number of vertices. The outer loop of Prim's algorithm loops v times and v operations are performed within each iteration. Prim's algorithm can be improved to O(e + log(v)) using Fibonacci Heaps.
+
+\subsection*{Charts}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
